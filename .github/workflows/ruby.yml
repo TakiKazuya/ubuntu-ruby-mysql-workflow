@@ -12,15 +12,15 @@ on: push
 jobs:
   setup:
     # ジョブを実行する仮想マシンを選択（ubuntu/macOS/Windows)
+    # mysql5.7を使いたいので16.04を指定
     runs-on: ubuntu-16.04
     services:
       db:
         image: mysql:5.7
         env:
           MYSQL_USER: root
-          MYSQL_HOST: 127.0.0.1
         ports:
-          - 33306:3306
+          - 3306:3306
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby
@@ -31,8 +31,8 @@ jobs:
       - name: DB Setup
         run: |
           sudo systemctl start mysql
-          mysql -u root -p -h 127.0.0.1 -proot -P 33306
+          mysql -u root -p -proot -e 'create database test_database;'
 
       - name: Debug
-        if: ${{ always() }}
+        if: ${{ failure() }}
         uses: mxschmitt/action-tmate@v3
