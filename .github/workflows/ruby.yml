@@ -20,7 +20,7 @@ jobs:
           MYSQL_USER: root
           MYSQL_HOST: 127.0.0.1
         ports:
-          - 3306:3306
+          - 33306:3306
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby
@@ -31,7 +31,7 @@ jobs:
       - name: DB Setup
         run: |
           sudo systemctl start mysql
-          mysql -u root -p -h 127.0.0.1 -proot
+          mysql -u root -p -h 127.0.0.1 -proot -P 33306
 
       - name: Debug
         if: ${{ always() }}
