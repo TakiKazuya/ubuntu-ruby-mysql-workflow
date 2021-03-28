@@ -17,6 +17,8 @@ jobs:
       db:
         image: mysql:5.7
         env:
+          MYSQL_USER: root
+          MYSQL_HOST: 127.0.0.1
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: test_database
         ports:
