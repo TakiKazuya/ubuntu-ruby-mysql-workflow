@@ -20,7 +20,7 @@ jobs:
           MYSQL_HOST: 127.0.0.1
           MYSQL_DB: test_database
           MYSQL_USER: root
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ROOT_PASSWORD: password
         ports:
           - 3306:3306
     steps:
@@ -32,7 +32,7 @@ jobs:
 
       - name: DB Setup
         run: |
-          mysql -u root -p -h 127.0.0.1 -P 3306 -d test_database
+          mysql -u root -p -h 127.0.0.1 -P 3306 test_database
 
       - name: Debug
         if: ${{ always() }}
