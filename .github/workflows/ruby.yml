@@ -17,10 +17,8 @@ jobs:
       db:
         image: mysql:5.7
         env:
-          MYSQL_HOST: 127.0.0.1
-          MYSQL_DB: test_database
-          MYSQL_USER: root
           MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test_database
         ports:
           - 3306:3306
     steps:
@@ -32,7 +30,8 @@ jobs:
 
       - name: DB Setup
         run: |
-          mysql -u root -p -h 127.0.0.1 -P 3306 test_database
+          sudo systemctl start mysql
+          mysql -u root -p -h 127.0.0.1 -ppassword test_database
 
       - name: Debug
         if: ${{ always() }}
