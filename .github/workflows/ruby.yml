@@ -5,27 +5,35 @@
 # This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
 # For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
 
-name: Ruby
+name: Ubuntu16.04 Ruby2.6.6 MySQL5.7
 
 on: push
 
 jobs:
-  test:
-
+  setup:
+    # ジョブを実行する仮想マシンを選択（ubuntu/macOS/Windows)
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        ruby-version: ['2.6', '2.7', '3.0']
-
+    services:
+      db:
+        image: mysql:5.7
+        env:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_DB: test_database
+          MYSQL_USER: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby
-    # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
-    # change this to (see https://github.com/ruby/setup-ruby#versioning):
-    # uses: ruby/setup-ruby@v1
-      uses: ruby/setup-ruby@473e4d8fe5dd94ee328fdfca9f8c9c7afc9dae5e
-      with:
-        ruby-version: ${{ matrix.ruby-version }}
-        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-    - name: Run tests
-      run: bundle exec rake
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6.6
+
+      - name: DB Setup
+        run: |
+          mysql -u root -p -h 127.0.0.1 -P 3306 -d test_database
+
+      - name: Debug
+        if: ${{ always() }}
+        uses: mxschmitt/action-tmate@v3
